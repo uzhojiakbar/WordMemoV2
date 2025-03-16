@@ -1,4 +1,4 @@
-import {useMutation, useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import Instance from "./api.jsx";
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode";
@@ -73,16 +73,14 @@ export const getUserInfo = () => {
 }
 
 
-
-
 export const GetWords = () => {
     return useQuery({
-        queryKey: ["words"], // So‘nggi natijani cache qilish uchun to‘g‘ri nom
+        queryKey: ["words"], // Cache uchun `date` qo‘shildi
         queryFn: async () => {
             try {
                 const response = await Instance.get(`/words`);
                 console.log(response);
-                return response.data; // Javobning faqat `data` qismini olish
+                return response.data;
             } catch (error) {
                 console.error("Error fetching data", error);
                 throw error;
@@ -92,3 +90,47 @@ export const GetWords = () => {
     });
 };
 
+export const GetWordsFilter = ({ date }) => {
+
+    return useQuery({
+        queryKey: ["wordsFilter",date], // Cache uchun `date` qo‘shildi
+        queryFn: async () => {
+            try {
+                const response = await Instance.get(`/words?${date ? `date=${date}` : ""}`);
+                console.log(response);
+
+                return response.data;
+            } catch (error) {
+                console.error("Error fetching data", error);
+                throw error;
+            }
+        },
+        staleTime: 1000 * 60 * 10,
+        enabled: !!date, // `date` mavjud bo‘lsa, so‘rovni jo‘natamiz
+    });
+};
+
+
+
+export const useAddWord = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (medicineDara) => {
+            console.log("LoginData", medicineDara);
+            const response = await Instance.post(
+                "words",
+                {...medicineDara?.requestData}
+            );
+            queryClient.invalidateQueries(["wordsFilter",medicineDara?.requestData?.date]);
+
+            return response.data;
+        },
+        onSuccess: (data, variables) => {
+            variables.onSuccess(data);
+        },
+        onError: (error, variables) => {
+            variables.onError(error);
+        },
+    });
+};
