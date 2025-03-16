@@ -46,11 +46,21 @@ const HomePage = () => {
 
     // Unikal sanalarni olish
     useEffect(() => {
-        if (words) {
-            const uniqueDates = [...new Set(words?.map(word => word.date))];
-            setDates(uniqueDates);
+        if (words?.length) {
+            const currentDate = getCurrentDate();
+            const uniqueDates = new Set(words.map(word => word.date));
+
+            if (!uniqueDates.has(currentDate)) {
+                uniqueDates.add(currentDate);
+            }
+
+            setDates([...uniqueDates]);
+        }else{
+            setDates([ getCurrentDate()]);
+
         }
     }, [words]);
+
 
     useEffect(() => {
         setCurrentWord(0);
@@ -150,6 +160,8 @@ const HomePage = () => {
                 ))}
             </DayCardWrapper>
 
+            {
+                shuffledWords?.length > 0 ?
             <WordWrapper>
                 <WordNavbar>
                     <div>{currentWord + 1} / {shuffledWords?.length}</div>
@@ -163,6 +175,22 @@ const HomePage = () => {
                     <div className="nextWord">Keyingi so'z</div>
                 </WordFooter>
             </WordWrapper>
+:
+                    <WordWrapper>
+                        <WordNavbar>
+
+                        </WordNavbar>
+
+                        <Word onDoubleClick={handleDoubleClick}>
+                            Hozircha so'zlar yo'q
+                        </Word>
+
+                        <WordFooter onClick={handleNextWord}>
+
+                        </WordFooter>
+                    </WordWrapper>
+
+            }
 
             <ButtonWrapper>
                 <AddButton onClick={showModal}>
