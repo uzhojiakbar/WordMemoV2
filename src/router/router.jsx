@@ -1,9 +1,8 @@
-import React, {lazy, Suspense, useEffect, useState} from "react";
+import React, { Suspense} from "react";
 import {Route, Routes} from "react-router-dom";
 import Login from "../pages/login/login.jsx";
-import Cookies from "js-cookie";
-import {jwtDecode} from "jwt-decode";
 import {getUserInfo} from "../utils/server.js";
+import Home from "../pages/home/home.jsx";
 
 
 export const Loader = () => (
@@ -15,19 +14,20 @@ export const Loader = () => (
 const Router = () => {
 
     const {data: userInfo, isLoading} = getUserInfo()
-    console.log("userinfooo", userInfo)
-
+    // AGAR FOYDALUVCHI ro'yxatdan otgan bo`lsa
     if (userInfo) {
         return <Suspense fallback={<Loader/>}>
             {
                 isLoading ? <Loader/> : ""
             }
             <Routes>
-                <Route path="/" element={<div>app</div>}/>
+                <Route path="/" element={<Home/>}/>
                 <Route path="*" element={<h1>NOT FOUND</h1>}/>
             </Routes>
         </Suspense>
-    } else {
+    }
+    // AGAR FOYDALUVCHI MALUMOTI Bo`lmasa
+    else {
         return (
             <Suspense fallback={<Loader/>}>
                 {

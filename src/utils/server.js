@@ -48,7 +48,7 @@ export const useRegister = () => {
 
 export const getUserInfo = () => {
     const accessToken = Cookies.get("access_token") || "";
-    const info = accessToken ? jwtDecode(accessToken) : null;
+    const info = accessToken.length ? jwtDecode(accessToken) : null;
     return useQuery({
         queryKey: ["userInfo", info?.id], // 'page' qiymatini kuzatish uchun 'queryKey' dinamik qilingan
         queryFn: async () => {
@@ -71,3 +71,24 @@ export const getUserInfo = () => {
         staleTime: 1000 * 60 * 10,
     });
 }
+
+
+
+
+export const GetWords = () => {
+    return useQuery({
+        queryKey: ["words"], // So‘nggi natijani cache qilish uchun to‘g‘ri nom
+        queryFn: async () => {
+            try {
+                const response = await Instance.get(`/words`);
+                console.log(response);
+                return response.data; // Javobning faqat `data` qismini olish
+            } catch (error) {
+                console.error("Error fetching data", error);
+                throw error;
+            }
+        },
+        staleTime: 1000 * 60 * 10,
+    });
+};
+
