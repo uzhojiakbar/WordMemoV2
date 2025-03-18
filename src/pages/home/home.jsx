@@ -159,7 +159,7 @@ const HomePage = () => {
         <HomePageContainer>
             {wordsFilterLoad || loading || isLoading ? <Loader/> : ""}
             <DayCardWrapper>
-                {dates?.reverse()?.map((v, index) => (
+                {dates?.map((v, index) => (
                     <DayCard
                         key={index}
                         onClick={() => currentData !== v && setCurrentData(v)}
