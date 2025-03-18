@@ -11,8 +11,9 @@ import {
 } from "./style.js";
 import {GetWords, GetWordsFilter, useAddWord} from "../../utils/server.js";
 import {Loader} from "../../router/router.jsx";
-import { Modal, Input, Form, Button } from 'antd';
+import {Modal, Input, Form, Button} from 'antd';
 import {useToast} from "../../hooks/useToast.jsx";
+import WordCheckModal from "./TestChecker.jsx";
 
 const HomePage = () => {
     const getCurrentDate = () => {
@@ -34,6 +35,7 @@ const HomePage = () => {
 
     // Modal holati
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpenTest, setIIsModalOpenTest] = useState(false);
     const [newWord, setNewWord] = useState({eng: '', uz: ''});
 
     // So‘zlarni random qilish
@@ -55,8 +57,8 @@ const HomePage = () => {
             }
 
             setDates([...uniqueDates]);
-        }else{
-            setDates([ getCurrentDate()]);
+        } else {
+            setDates([getCurrentDate()]);
 
         }
     }, [words]);
@@ -76,9 +78,9 @@ const HomePage = () => {
     };
 
     const handleDoubleClick = () => {
-        setShowTranslate(true);
+        setShowTranslate(!showTranslate);
 
-        if (!seenWords.has(currentWord)) {
+        if (showTranslate && !seenWords.has(currentWord)) {
             setSeenWords(prev => new Set([...prev, currentWord]));
 
             let newWords = [...shuffledWords];
@@ -107,11 +109,19 @@ const HomePage = () => {
     const showModal = () => {
         setIsModalOpen(true);
     };
+    const showModalshowModalTest = () => {
+        setIIsModalOpenTest(true);
+    };
 
     // Modal yopish
     const handleCancel = () => {
         setIsModalOpen(false);
         setNewWord({eng: '', uz: ''});
+    };
+
+    // Modal yopish
+    const handleCancelTest = () => {
+        setIIsModalOpenTest(false);
     };
 
     const mutation = useAddWord()
@@ -162,20 +172,20 @@ const HomePage = () => {
 
             {
                 shuffledWords?.length > 0 ?
-            <WordWrapper>
-                <WordNavbar>
-                    <div>{currentWord + 1} / {shuffledWords?.length}</div>
-                </WordNavbar>
+                    <WordWrapper>
+                        <WordNavbar>
+                            <div>{currentWord + 1} / {shuffledWords?.length}</div>
+                        </WordNavbar>
 
-                <Word onDoubleClick={handleDoubleClick}>
-                    {showTranslate ? shuffledWords?.[currentWord]?.uz : shuffledWords?.[currentWord]?.eng}
-                </Word>
+                        <Word bg={showTranslate} onDoubleClick={handleDoubleClick}>
+                            {showTranslate ? shuffledWords?.[currentWord]?.uz : shuffledWords?.[currentWord]?.eng}
+                        </Word>
 
-                <WordFooter onClick={handleNextWord}>
-                    <div className="nextWord">Keyingi so'z</div>
-                </WordFooter>
-            </WordWrapper>
-:
+                        <WordFooter onClick={handleNextWord}>
+                            <div className="nextWord">Keyingi so'z</div>
+                        </WordFooter>
+                    </WordWrapper>
+                    :
                     <WordWrapper>
                         <WordNavbar>
 
@@ -193,11 +203,21 @@ const HomePage = () => {
             }
 
             <ButtonWrapper>
+                {
+                    wordsFilter?.length > 0 ?
+                        <AddButton color={"yellow"} onClick={showModalshowModalTest}>
+                            <i className="fa-solid fa-plus"></i>
+                            Testni boshlash
+                        </AddButton>
+                        : ""
+                }
                 <AddButton onClick={showModal}>
                     <i className="fa-solid fa-plus"></i>
                     So'z qo'shish
                 </AddButton>
             </ButtonWrapper>
+
+            <WordCheckModal visible={isModalOpenTest} onClose={handleCancelTest} words={wordsFilter}/>
 
             <StyledModal title="Yangi so'z qo'shish" open={isModalOpen} onCancel={handleCancel} footer={null}>
                 <StyledForm layout="vertical">

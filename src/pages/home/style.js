@@ -27,7 +27,7 @@ export const DayCardWrapper = styled.div`
     overflow-x: auto;
     display: flex;
     scroll-behavior: smooth;
-    flex-direction: row-reverse;
+    flex-direction: row;
     padding: 10px 0;
 
     /* Scrollbar styling */
@@ -135,15 +135,12 @@ export const Word = styled.div`
     font-weight: bold;
     color: #fff;
     padding: 10px 20px;
-    background: #292929;
+    background: ${({bg})=>bg?"#343232":"#292929"};
     border-radius: 15px;
     box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
 
-    &:hover {
-        background: #333;
-        transform: scale(1.05);
-    }
+   
 `;
 
 
@@ -152,19 +149,21 @@ export const ButtonWrapper = styled.div`
     margin: 10px auto;
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    gap: 20px;
     align-items: center;
     border-radius: 15px;
     padding: 10px;
 `;
 
 export const AddButton = styled.button`
-    width:  fit-content;
+    width:  100%;
     height: 50px;
     padding: 15px;
-    color: #fff;
-    background: #3e8e41;
     outline: none;
+    background: ${({color})=>color=="yellow"?"#f1da14":"#3e8e41"};
     border: none;
+    color:  ${({color})=>color=="yellow"?"#343232":"#fff"};
     font-size: 20px;
     font-weight: bold;
     cursor: pointer;
@@ -175,6 +174,7 @@ export const AddButton = styled.button`
     gap: 5px;
     align-items: center;
     justify-content: center;
+    
 
     &:active {
         transform: scale(0.95);
@@ -187,6 +187,8 @@ export const StyledModal = styled(Modal)`
     .ant-modal-content {
         background: #1e1e1e;
         color: #fff;
+        height: 80vh;
+        
 
         border-radius: 12px;
     }
@@ -212,6 +214,9 @@ export const StyledModal = styled(Modal)`
     .title{
         color: #fff;
     }
+    
+    height: 80vh;
+    
 `;
 
 
@@ -231,6 +236,13 @@ export const StyledFormItem = styled(Form.Item)`
     border-radius: 8px;
   }
 `;
+
+
+export const ModalContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+`
 
 export const StyledForm = styled(Form)`
     display: flex;
