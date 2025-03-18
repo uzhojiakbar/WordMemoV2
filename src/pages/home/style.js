@@ -135,7 +135,7 @@ export const Word = styled.div`
     font-weight: bold;
     color: #fff;
     padding: 10px 20px;
-    background: ${({bg})=>bg?"#343232":"#292929"};
+    background: ${({bg})=>bg?"rgba(108,157,112,0.39)":"#292929"};
     border-radius: 15px;
     box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
